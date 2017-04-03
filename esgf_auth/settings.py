@@ -77,7 +77,6 @@ WSGI_APPLICATION = 'esgf_auth.wsgi.application'
 AUTHENTICATION_BACKENDS = [
    'esgf_auth.backends.esgf.ESGFOAuth2',
    'esgf_auth.backends.esgf.ESGFOpenId',
-   'social_core.backends.yahoo.YahooOpenId',
    'django.contrib.auth.backends.ModelBackend',
 ]
 
