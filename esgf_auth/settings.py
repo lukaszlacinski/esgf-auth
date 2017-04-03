@@ -76,10 +76,25 @@ WSGI_APPLICATION = 'esgf_auth.wsgi.application'
 
 AUTHENTICATION_BACKENDS = [
    'esgf_auth.backends.esgf.ESGFOAuth2',
+   'esgf_auth.backends.esgf.ESGFOpenId',
+   'social_core.backends.yahoo.YahooOpenId',
    'django.contrib.auth.backends.ModelBackend',
 ]
 
-SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['openid',]
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'esgf_auth.backends.esgf.associate_by_openid',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details'
+)
+
+SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['openid_identifier',]
 SOCIAL_AUTH_ESGF_KEY = ''
 SOCIAL_AUTH_ESGF_SECRET = ''
 SOCIAL_AUTH_SANITIZE_REDIRECTS = False
