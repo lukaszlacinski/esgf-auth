@@ -19,29 +19,21 @@ $ . venv/bin/activate
 
 ```
 
-Install Django and social-app-django
-
-```
-
-(venv)$ pip install django
-
-(venv)$ pip install social-app-django
-
-```
-
-Download esgf-auth
+Download and install esgf-auth with dependencies (Django, social-auth-app-django, social-auth-core, etc.)
 
 ```
 
 (venv)$ git clone git@github.com:lukaszlacinski/esgf-auth
+
+(venv)$ cd esgf-auth
+
+(venv)$ pip install -r requirements.txt
 
 ```
 
 Create the database
 
 ```
-
-(venv)$ cd esgf-auth
 
 (venv)$ ./manage.py migrate
 
