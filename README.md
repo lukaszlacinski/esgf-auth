@@ -8,35 +8,24 @@ Simple Django web aplication with ESGF backend for social-core (former python-so
 Create Python 2.7 virtual environment
 
 ```
-
 $ python --version 
-
 Python 2.7.10
-
 $ virtualenv venv
-
 $ . venv/bin/activate
-
 ```
 
 Download and install esgf-auth with dependencies (Django, social-auth-app-django, social-auth-core, etc.)
 
 ```
-
 (venv)$ git clone git@github.com:lukaszlacinski/esgf-auth
-
 (venv)$ cd esgf-auth
-
 (venv)$ pip install -r requirements.txt
-
 ```
 
 Create the database
 
 ```
-
 (venv)$ ./manage.py migrate
-
 ```
 
 Set SOCIAL_AUTH_ESGF_KEY AND SOCIAL_AUTH_ESGF_SECRET in esgf-auth/settings.py to a client id and secret received from an admin of an ESGF OAuth2 server.
@@ -48,33 +37,49 @@ Set SOCIAL_AUTH_ESGF_KEY AND SOCIAL_AUTH_ESGF_SECRET in esgf-auth/settings.py to
 For example, on Ubuntu, add the following lines to /etc/apache2/sites-available/default-ssl,conf in `<VirtualHost _default_:443>`
 
 ```
-
     WSGIDaemonProcess esgf_auth python-path=<your_base_dir>/esgf-auth:<your_base_dir>/venv/lib/python2.7/site-packages
-
     WSGIProcessGroup esgf_auth
-
     WSGIScriptAlias / <your_base_dir>/esgf-auth/esgf_auth/wsgi.py process-group=esgf_auth
-
     <Directory <your_base_dir>/esgf-auth/esgf_auth>
-
         <Files wsgi.py>
-
             # Apache >= 2.4
-
             #Require all granted
-
             # Apache <= 2.2
-
             Order allow,deny
-
             Allow from all
-
         </Files>
-
     </Directory>
-
 ```
 
 Restart Apache and open `https://<your_hostname>/` in a web browser. You will likely need to change ownership of the 'esgf-auth' directory to www-data (on Ubuntu), so Apache can access the SQLite3 database file.
 
+If you already have another web app set up at the '/' URL path, you will have to run the esgf-auth app at a prefixed URL. in this case, add the following lines to your apache configuration file:
 
+```
+Listen 8088
+<VirtualHost *:8088>
+    WSGIDaemonProcess esgf_auth python-path=<your_base_dir>/esgf-auth:<your_base_dir>/venv/lib/python2.7/site-packages
+    WSGIProcessGroup esgf_auth
+    WSGIScriptAlias /<prefix> <your_base_dir>/esgf-auth/esgf_auth/wsgi.py process-group=esgf_auth
+    <Directory <your_base_dir>/esgf-auth/esgf_auth>
+        <Files wsgi.py>
+            # Apache >= 2.4
+            #Require all granted
+            # Apache <= 2.2
+            Order allow,deny
+            Allow from localhost
+        </Files>
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:443>
+
+    ProxyPass /<prefix> http://localhost:8088/<prefix>
+    ProxyPassReverse /<prefix> http://localhost:8088/<prefix>
+
+</VirtualHost>
+```
+and add the following line to settings.py:
+```
+USE_X_FORWARDED_HOST = True
+```
