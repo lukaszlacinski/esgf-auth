@@ -28,7 +28,7 @@ Create the database
 (venv)$ ./manage.py migrate
 ```
 
-Set SOCIAL_AUTH_ESGF_KEY AND SOCIAL_AUTH_ESGF_SECRET in esgf-auth/settings.py to a client id and secret received from an admin of an ESGF OAuth2 server. When you register your OAuth2 client, your redirect URI is `https://<your_hostname>[/<prefix>]/complete/esgf/`.
+Set SOCIAL_AUTH_ESGF_KEY and SOCIAL_AUTH_ESGF_SECRET in esgf-auth/settings.py to a client id and secret received from an admin of an ESGF OAuth2 server. When you register your OAuth2 client, your redirect URI is `https://<your_hostname>[/<prefix>]/complete/esgf/`.
 
 
 # Apache/mod_wsgi
