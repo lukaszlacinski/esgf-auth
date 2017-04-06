@@ -49,17 +49,25 @@ For example, on Ubuntu, add the following lines to /etc/apache2/sites-available/
 
 ```
 
-    WSGIDaemonProcess esgf_auth python-path=<your_base_dir>/esgf_auth:<your_base_dir>/venv/lib/python2.7/site-packages
+    WSGIDaemonProcess esgf_auth python-path=<your_base_dir>/esgf-auth:<your_base_dir>/venv/lib/python2.7/site-packages
 
     WSGIProcessGroup esgf_auth
 
-    WSGIScriptAlias / <your_base_dir>/esgf_auth/esgf_auth/wsgi.py process-group=esgf_auth
+    WSGIScriptAlias / <your_base_dir>/esgf-auth/esgf_auth/wsgi.py process-group=esgf_auth
 
-    <Directory <your_base_dir>/esgf_auth/esgf_auth>
+    <Directory <your_base_dir>/esgf-auth/esgf_auth>
 
         <Files wsgi.py>
 
-            Require all granted
+            # Apache >= 2.4
+
+            #Require all granted
+
+            # Apache <= 2.2
+
+            Order allow,deny
+
+            Allow from all
 
         </Files>
 
