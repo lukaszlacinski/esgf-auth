@@ -49,4 +49,4 @@ For example, on Ubuntu, add the following lines to /etc/apache2/sites-available/
     </Directory>
 ```
 
-where <prefix> is a optional path that you may need if you have another web app running at the '/' path. After restarting Apache, open `https://<your_hostname>/<prefix>` in a web browser. You will likely need to change ownership of the 'esgf-auth' directory to www-data (on Ubuntu), so Apache can access the SQLite3 database file.
+where `<prefix>` is a optional path that you may need if you have another web app running at the '/' path. After restarting Apache, open `https://<your_hostname>/<prefix>` in a web browser. You will likely need to change ownership of the 'esgf-auth' directory to www-data (on Ubuntu), so Apache can access the SQLite3 database file.
