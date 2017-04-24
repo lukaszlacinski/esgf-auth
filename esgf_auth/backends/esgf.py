@@ -1,5 +1,6 @@
 from social_core.backends.oauth import BaseOAuth2
 from social_core.backends.open_id import OpenIdAuth, OPENID_ID_FIELD
+from social_core.exceptions import AuthMissingParameter
 from six.moves.urllib_parse import urlencode, unquote
 
 import os

@@ -37,8 +37,7 @@ For example, on Ubuntu, add the following lines to /etc/apache2/sites-available/
 
 ```
     WSGIDaemonProcess esgf_auth python-path=<your_base_dir>/esgf-auth:<your_base_dir>/venv/lib/python2.7/site-packages
-    WSGIProcessGroup esgf_auth
-    WSGIScriptAlias / <your_base_dir>/esgf-auth/esgf_auth/wsgi.py process-group=esgf_auth
+    WSGIScriptAlias /<prefix> <your_base_dir>/esgf-auth/esgf_auth/wsgi.py process-group=esgf_auth
     <Directory <your_base_dir>/esgf-auth/esgf_auth>
         <Files wsgi.py>
             # Apache >= 2.4
@@ -50,35 +49,4 @@ For example, on Ubuntu, add the following lines to /etc/apache2/sites-available/
     </Directory>
 ```
 
-Restart Apache and open `https://<your_hostname>/` in a web browser. You will likely need to change ownership of the 'esgf-auth' directory to www-data (on Ubuntu), so Apache can access the SQLite3 database file.
-
-If you already have another web app set up at the '/' URL path, you will have to run the esgf-auth app at a prefixed URL. in this case, add the following lines to your apache configuration file:
-
-```
-Listen 8088
-<VirtualHost *:8088>
-    WSGIDaemonProcess esgf_auth python-path=<your_base_dir>/esgf-auth:<your_base_dir>/venv/lib/python2.7/site-packages
-    WSGIProcessGroup esgf_auth
-    WSGIScriptAlias /<prefix> <your_base_dir>/esgf-auth/esgf_auth/wsgi.py process-group=esgf_auth
-    <Directory <your_base_dir>/esgf-auth/esgf_auth>
-        <Files wsgi.py>
-            # Apache >= 2.4
-            #Require all granted
-            # Apache <= 2.2
-            Order allow,deny
-            Allow from localhost
-        </Files>
-    </Directory>
-</VirtualHost>
-
-<VirtualHost *:443>
-
-    ProxyPass /<prefix> http://localhost:8088/<prefix>
-    ProxyPassReverse /<prefix> http://localhost:8088/<prefix>
-
-</VirtualHost>
-```
-and add the following line to settings.py:
-```
-USE_X_FORWARDED_HOST = True
-```
+where <prefix> is a optional path that you may need if you have another web app running at the '/' path. After restarting Apache, open `https://<your_hostname>/<prefix>` in a web browser. You will likely need to change ownership of the 'esgf-auth' directory to www-data (on Ubuntu), so Apache can access the SQLite3 database file.
